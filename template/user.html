@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>User</title>
+</head>
+<body>
+    <h1 class="d-flex justify-content-center text-success" id="username"></h1>
+    <div class="d-flex justify-content-center">
+        <img alt="" id="img">
+    </div>
+
+    <div id="profile">
+    </div>
+    <script>
+        let userid = location.href.split("?")[1];
+        let token = localStorage.getItem("token")
+        async function get_userdata(){
+            fetch(`http://localhost:3000/getdata/${userid}`,{
+                method:"get",
+                headers:{authorization:`Bearer ${token}`}
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                console.log(data.profile);
+                document.getElementById("profile").innerHTML =` <img src="${data.profile}" alt="img">`
+                document.getElementById("username").innerHTML = `<b>Hello ${data.username}</b>`
+                document.getElementById("img").src = `http://localhost:3000/get_img/${data.image.filename}`
+            })
+        }
+        get_userdata()
+    </script>
+</body>
+</html>

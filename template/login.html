@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Login</title>
+</head>
+<body>
+    <h1 class="d-flex justify-content-center text-primary pt-5 mt-5"  >Login</h1>
+    <form class="d-flex justify-content-center"  onsubmit="login(event)">
+        <input type="username" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <input class="text-danger bg-primary" type="submit" value="Login">
+    </form>
+
+    <script>
+
+        function login(event){
+            event.preventDefault();
+            let username = event.target[0].value;
+            let password = event.target[1].value;
+            fetch(`http://localhost:3000/login`,{
+                method:"post",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({username,password})
+            })
+            .then(res => {
+                if(res.status == 404){
+                    alert("user not found !")
+                }
+                else if (res.status == 401) {
+                    alert("Invalid username or password")
+                } 
+                return  res.json()
+            })
+            .then(data => {
+                console.log(data);
+                alert(data.msg)
+                localStorage.setItem("token",data.token)
+                location.href = `http://localhost:3000/user.html?${data.userid}`
+            })
+        }
+    </script>
+</body>
+</html>
